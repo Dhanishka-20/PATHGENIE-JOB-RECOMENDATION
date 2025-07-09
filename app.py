@@ -1,4 +1,3 @@
-# Paste your full working Streamlit code below
 
 import streamlit as st
 import pandas as pd
@@ -24,9 +23,9 @@ def load_data():
     return df
 
 df = load_data()
+
 vectorizer = TfidfVectorizer(stop_words='english')
 tfidf_matrix = vectorizer.fit_transform(df['text'])
-
 X = tfidf_matrix
 y = df['Job Title']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -78,15 +77,27 @@ elif page == "Job Matching":
                 top_indices = scores[0].argsort()[-5:][::-1]
                 results = filtered_df.iloc[top_indices][['Job Title', 'Job Description', 'Skills', 'Location', 'Experience']].reset_index(drop=True)
 
+                job_platforms = {
+                    "LinkedIn": "https://www.linkedin.com/jobs/search/?keywords={}",
+                    "Naukri": "https://www.naukri.com/{}-jobs",
+                    "Indeed": "https://www.indeed.com/jobs?q={}",
+                    "Glassdoor": "https://www.glassdoor.co.in/Job/jobs.htm?sc.keyword={}"
+                }
+
+                selected_platform = st.selectbox("Choose Job Platform", options=list(job_platforms.keys()))
+
                 st.subheader("Top 5 Recommended Jobs:")
                 for i in range(len(results)):
                     job = results.iloc[i]
+                    job_title_encoded = job['Job Title'].replace(" ", "+")
+                    job_link = job_platforms[selected_platform].format(job_title_encoded)
+
                     st.markdown(f"""
                         <div style='background-color:#fef9c3;padding:15px;border-radius:10px;margin-bottom:10px;color:black'>
                             <b style='font-size:16px'>{job['Job Title']}</b> — <i>{job['Location']} ({job['Experience']})</i><br>
                             <b>Skills:</b> {job['Skills']}<br>
                             <p>{job['Job Description']}</p>
-                            <a href='https://www.linkedin.com/jobs/' target='_blank'>Apply Here</a>
+                            <a href='{job_link}' target='_blank'>Apply on {selected_platform}</a>
                         </div>
                     """, unsafe_allow_html=True)
 
@@ -121,7 +132,7 @@ elif page == "Dashboard":
     ax.set_ylabel("Actual")
     st.pyplot(fig)
 
-    st.subheader(" Classification Report")
+    st.subheader("📋 Classification Report")
     st.text(report)
 
     st.subheader("📈 Resume Skill Match Rate ")
