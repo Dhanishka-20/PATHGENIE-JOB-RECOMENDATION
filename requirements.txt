@@ -5,4 +5,9 @@ seaborn
 pinecone-client
 tiktoken
 pypdf
+PyPDF2
 langchain
+scikit-learn
+matplotlib
+spacy
+numpy
