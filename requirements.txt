@@ -1,8 +1,8 @@
 streamlit
 pandas
-numpy
-scikit-learn
-matplotlib
-PyPDF2
-pyngrok
-
+openai
+seaborn
+pinecone-client
+tiktoken
+pypdf
+langchain
