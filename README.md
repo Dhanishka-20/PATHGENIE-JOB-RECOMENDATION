@@ -1,5 +1,5 @@
 # PATHGENIE-JOB-RECOMENDATION
-Here is a clean and professional `README.md` file for your job recommender system project, without emojis:
+
 
 ---
 
